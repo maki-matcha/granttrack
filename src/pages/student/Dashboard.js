@@ -229,7 +229,7 @@ export default function StudentDashboard() {
                 </SimpleGrid>
               </Box>
             )}
-
+{/* --- UPDATED STEP 1: Required Student Information --- */}
             {/* --- UPDATED STEP 1: Required Student Information --- */}
             {modalStep === 1 && (
               <Box>
