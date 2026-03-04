@@ -231,7 +231,6 @@ export default function StudentDashboard() {
             )}
 
             {/* --- UPDATED STEP 1: Required Student Information --- */}
-            {/* --- UPDATED STEP 1: Required Student Information --- */}
             {modalStep === 1 && (
               <Box>
                 <Heading size="sm" color="blue.900" mb={4}>Required Details</Heading>
