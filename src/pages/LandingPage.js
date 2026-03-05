@@ -9,9 +9,9 @@ import { motion } from 'framer-motion';
 // Re-using data from student dashboard for consistency
 import { scholarshipsData } from './student/Dashboard';
 import scholarshipImg from './scholarship.jpg';
-import students1Img from './students1.jpg';
-import students2Img from './students2.jpg';
-import students4Img from './students4.jpg';
+import students1Img from './students1.png';
+import students2Img from './students2.png';
+import students4Img from './students4.png';
 
 const getBadgeColor = (status) => {
     if (status === 'Ongoing') return 'yellow';
