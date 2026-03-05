@@ -20,9 +20,9 @@ const getBadgeColor = (status) => {
     return 'gray';
 };
 
-// --- NEW: Buttery Smooth Transition Settings ---
-const smoothEase = [0.16, 1, 0.3, 1]; // Premium "glide to a stop" curve
-const defaultDuration = 1; // Slower, more elegant timing
+// --- Buttery Smooth Transition Settings ---
+const smoothEase = [0.16, 1, 0.3, 1]; 
+const defaultDuration = 1; 
 
 const slideUp = {
   initial: { opacity: 0, y: 40 },
@@ -188,7 +188,7 @@ const Discover = () => (
              initial={{ opacity: 0, y: 40 }}
              whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true, margin: "-50px" }}
-             transition={{ duration: 0.8, ease: smoothEase, delay: index * 0.15 }} // Slower duration, keeps the stagger
+             transition={{ duration: 0.8, ease: smoothEase, delay: index * 0.15 }}
              bg="brand.mediumBlue" borderRadius="xl" overflow="hidden" color="white" boxShadow="lg" display="flex" flexDirection="column"
              _hover={{ transform: 'translateY(-5px)', shadow: 'xl' }}
            >
@@ -223,7 +223,7 @@ const Feature = ({ icon, title, text, delay = 0 }) => (
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 1, ease: smoothEase, delay: delay }} // Swapped to a gentle fade-up instead of scale
+    transition={{ duration: 1, ease: smoothEase, delay: delay }}
     align={{ base: 'center', md: 'start' }} 
     spacing={3} 
     textAlign={{ base: 'center', md: 'left' }}
@@ -274,36 +274,63 @@ const MissionVision = () => (
   <Box 
     bg="white" pt={{ base: 24, md: 40 }} pb={20} mt={{ base: "-80px", md: "-150px" }} borderTopRadius={{ base: '50% 40px', md: '50% 150px' }} position="relative" zIndex={2} overflow="hidden"
   >
-    <Container maxW="7xl">
-      <Heading as={motion.h2} {...slideUp} size={{ base: 'xl', md: '2xl' }} mb={16} textAlign="center" color="brand.darkBlue">Mission & Vision</Heading>
+    <Container maxW="5xl">
+      <Heading as={motion.h2} {...slideUp} size={{ base: 'xl', md: '2xl' }} mb={20} textAlign="center" color="brand.darkBlue">Mission & Vision</Heading>
       
-      {/* Mission */}
-      <Flex direction={{ base: 'column', md: 'row' }} align="center" mb={20} gap={10}>
-        <Box as={motion.div} {...slideLeft} flex={1} bg="brand.mediumBlue" color="white" p={{ base: 6, md: 10 }} borderRadius="xl" position="relative" w="full">
-           <Heading size="lg" mb={4}>Our Mission</Heading>
-           <Text fontSize={{ base: 'sm', md: 'md' }}>
-             To provide a seamless, efficient, and transparent platform that empowers students to access scholarship opportunities while enabling administrators to manage programs effectively.
-           </Text>
-           <Icon as={FaRocket} position="absolute" bottom={5} right={5} w={{ base: 8, md: 12 }} h={{ base: 8, md: 12 }} color="blue.300" opacity={0.5} />
-        </Box>
-        <Box as={motion.div} {...slideRight} flex={1}>
-           <Image src={students2Img} alt="Mission Illustration" fallbackSrc="https://via.placeholder.com/500x300?text=Mission+Illustration" w="full" borderRadius="md" />
-        </Box>
-      </Flex>
+      <VStack spacing={24}>
+        {/* Mission (Text Left, Image Right) */}
+        <Flex direction={{ base: 'column', md: 'row' }} align="center" position="relative" w="full">
+          {/* TEXT BOX - Pushed to the back */}
+          <Box 
+            as={motion.div} {...slideLeft} 
+            bg="#1B4965" 
+            color="white" p={{ base: 8, md: 12 }} 
+            pr={{ base: 8, md: 24 }} // <-- ADDED: Extra right padding to prevent text getting covered
+            borderRadius="2xl" 
+            position="relative" w={{ base: 'full', md: '60%' }} 
+            zIndex={1} boxShadow="lg"
+            mr={{ md: '-10%' }} 
+          >
+             {/* ADDED ICON BACK */}
+             <Icon as={FaRocket} boxSize={10} color="blue.300" mb={4} />
+             <Heading size="lg" mb={4}>Our Mission</Heading>
+             <Text fontSize={{ base: 'sm', md: 'lg' }} lineHeight="1.8">
+               To provide a seamless, efficient, and transparent platform that empowers students to access scholarship opportunities while enabling administrators to manage programs effectively.
+             </Text>
+          </Box>
+          {/* IMAGE - Popping out in front */}
+          <Box as={motion.div} {...slideRight} w={{ base: 'full', md: '55%' }} zIndex={2} mt={{ base: 8, md: 0 }}>
+             <Image src={students2Img} alt="Mission Illustration" fallbackSrc="https://via.placeholder.com/600x400?text=Mission+Illustration" w="full" dropShadow="2xl" />
+          </Box>
+        </Flex>
 
-      {/* Vision */}
-      <Flex direction={{ base: 'column-reverse', md: 'row' }} align="center" gap={10}>
-        <Box as={motion.div} {...slideLeft} flex={1}>
-           <Image src={students4Img} alt="Vision Illustration" fallbackSrc="https://via.placeholder.com/500x300?text=Vision+Illustration" w="full" borderRadius="md" />
-        </Box>
-        <Box as={motion.div} {...slideRight} flex={1} bg="brand.mediumBlue" color="white" p={{ base: 6, md: 10 }} borderRadius="xl" position="relative" w="full">
-           <Heading size="lg" mb={4}>Our Vision</Heading>
-           <Text fontSize={{ base: 'sm', md: 'md' }}>
-             To become the leading digital solution for scholarship management, ensuring that every deserving student has equal access to educational opportunities.
-           </Text>
-           <Icon as={FaEye} position="absolute" bottom={5} right={5} w={{ base: 8, md: 12 }} h={{ base: 8, md: 12 }} color="blue.300" opacity={0.5} />
-        </Box>
-      </Flex>
+        {/* Vision (Image Left, Text Right) */}
+        <Flex direction={{ base: 'column-reverse', md: 'row' }} align="center" position="relative" w="full">
+          {/* IMAGE - Popping out in front */}
+          <Box as={motion.div} {...slideLeft} w={{ base: 'full', md: '55%' }} zIndex={2} mt={{ base: 8, md: 0 }}>
+             <Image src={students4Img} alt="Vision Illustration" fallbackSrc="https://via.placeholder.com/600x400?text=Vision+Illustration" w="full" dropShadow="2xl" />
+          </Box>
+          {/* TEXT BOX - Pushed to the back */}
+          <Box 
+            as={motion.div} {...slideRight} 
+            bg="#1B4965" 
+            color="white" p={{ base: 8, md: 12 }} 
+            pl={{ base: 8, md: 24 }} // <-- ADDED: Extra left padding to prevent text getting covered
+            borderRadius="2xl" 
+            position="relative" w={{ base: 'full', md: '60%' }} 
+            zIndex={1} boxShadow="lg"
+            ml={{ md: '-10%' }} 
+          >
+             {/* ADDED ICON BACK */}
+             <Icon as={FaEye} boxSize={10} color="blue.300" mb={4} />
+             <Heading size="lg" mb={4}>Our Vision</Heading>
+             <Text fontSize={{ base: 'sm', md: 'lg' }} lineHeight="1.8">
+               To become the leading digital solution for scholarship management, ensuring that every deserving student has equal access to educational opportunities.
+             </Text>
+          </Box>
+        </Flex>
+      </VStack>
+
     </Container>
   </Box>
 );

@@ -8,13 +8,16 @@ import Login from './pages/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminApplication from './pages/admin/Application';
 import AdminAnnouncement from './pages/admin/Announcement';
+import AdminProfile from './pages/admin/Profile';
 import StudentDashboard from './pages/student/Dashboard';
 import StudentApplication from './pages/student/Application';
 import StudentAnnouncement from './pages/student/Announcement';
+import StudentProfile from './pages/student/Profile';
 
 // NEW IMPORTS: Organization Pages
 import OrganizationDashboard from './pages/organization/Orgdb';
 import OrgAnnouncement from './pages/organization/OrgAnnouncement';
+import OrganizationProfile from './pages/organization/Profile';
 
 // Custom theme colors to match your design
 const theme = extendTheme({
@@ -48,15 +51,18 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/application" element={<AdminApplication />} />
           <Route path="/admin/announcement" element={<AdminAnnouncement />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
 
           {/* Student Routes */}
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/application" element={<StudentApplication />} />
           <Route path="/student/announcement" element={<StudentAnnouncement />} />
+          <Route path="/student/profile" element={<StudentProfile />} />
 
           {/* NEW: Organization Routes */}
           <Route path="/organization/dashboard" element={<OrganizationDashboard />} />
           <Route path="/organization/announcement" element={<OrgAnnouncement />} />
+          <Route path="/organization/profile" element={<OrganizationProfile />} />
         </Routes>
       </Router>
     </ChakraProvider>

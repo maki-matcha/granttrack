@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box, Flex, Text, Input, Button, Link, FormControl, FormLabel, Image, VStack, Icon
+  Box, Flex, Text, Input, Button, Link, FormControl, FormLabel, Image, VStack, Icon, Divider
 } from '@chakra-ui/react';
 import { FaArrowLeft, FaUserGraduate, FaUserShield, FaBuilding } from 'react-icons/fa';
 
@@ -21,21 +21,21 @@ export default function Login() {
       btnBg: '#0b1d2e',
       inputLabel: 'LRN (Learner Reference Number)',
       inputType: 'text',
-      icon: FaUserGraduate // Added dynamic icon
+      icon: FaUserGraduate
     },
     admin: {
       bg: 'brand.adminBg', 
       btnBg: '#1a4e6e',
       inputLabel: 'Admin Username', 
       inputType: 'text',
-      icon: FaUserShield // Added dynamic icon
+      icon: FaUserShield
     },
     organization: {
       bg: '#5F9598',         
       btnBg: '#42686a',      
       inputLabel: 'Organization Email Address',
       inputType: 'email',
-      icon: FaBuilding // Added dynamic icon
+      icon: FaBuilding
     }
   };
 
@@ -113,33 +113,45 @@ export default function Login() {
       >
         <Box w="full" maxW="md">
           
-          {/* Custom Segmented Control for Role Selection */}
-          <Box mb={{ base: 8, md: 10 }}>
-            <Text mb={3} fontSize={{ base: 'xs', md: 'sm' }} fontWeight="bold" textTransform="uppercase" letterSpacing="wide" textAlign="center">
-              Login as
-            </Text>
-            <Flex bg="whiteAlpha.200" p={1} borderRadius="md" justify="space-between">
-              {['student', 'admin', 'organization'].map((r) => (
-                <Button
-                  key={r}
-                  flex={1}
-                  size={{ base: 'sm', md: 'md' }}
-                  variant="ghost"
-                  bg={role === r ? 'white' : 'transparent'}
-                  color={role === r ? 'black' : 'white'}
-                  _hover={{ bg: role === r ? 'white' : 'whiteAlpha.300' }}
-                  onClick={() => handleRoleChange(r)}
-                  textTransform="capitalize"
-                  fontWeight={role === r ? 'bold' : 'medium'}
-                  transition="all 0.2s"
-                >
-                  {r}
-                </Button>
-              ))}
-            </Flex>
-          </Box>
+          {/* --- CONDITIONAL UI: User Toggle vs. Admin Title --- */}
+          {role !== 'admin' ? (
+            <Box mb={{ base: 8, md: 10 }}>
+              <Text mb={3} fontSize={{ base: 'xs', md: 'sm' }} fontWeight="bold" textTransform="uppercase" letterSpacing="wide" textAlign="center">
+                Login as
+              </Text>
+              {/* Only Student and Organization shown here now */}
+              <Flex bg="whiteAlpha.200" p={1} borderRadius="md" justify="space-between">
+                {['student', 'organization'].map((r) => (
+                  <Button
+                    key={r}
+                    flex={1}
+                    size={{ base: 'sm', md: 'md' }}
+                    variant="ghost"
+                    bg={role === r ? 'white' : 'transparent'}
+                    color={role === r ? 'black' : 'white'}
+                    _hover={{ bg: role === r ? 'white' : 'whiteAlpha.300' }}
+                    onClick={() => handleRoleChange(r)}
+                    textTransform="capitalize"
+                    fontWeight={role === r ? 'bold' : 'medium'}
+                    transition="all 0.2s"
+                  >
+                    {r}
+                  </Button>
+                ))}
+              </Flex>
+            </Box>
+          ) : (
+            <Box mb={{ base: 8, md: 10 }} textAlign="center">
+              <Text fontSize={{ base: 'xl', md: '2xl' }} fontWeight="900" letterSpacing="wide" textTransform="uppercase">
+                Administrator Portal
+              </Text>
+              <Text fontSize="sm" opacity={0.8} mt={2}>
+                Please enter your authorized admin credentials
+              </Text>
+            </Box>
+          )}
 
-          {/* --- NEW: Dynamic Icon Display --- */}
+          {/* Dynamic Icon Display */}
           <Flex justify="center" mb={8}>
             <Flex 
               w={20} h={20} 
@@ -207,11 +219,30 @@ export default function Login() {
               Sign In
             </Button>
 
-            <Flex justify="center">
+            <VStack spacing={4} mt={6}>
               <Text fontSize={{ base: 'xs', md: 'sm' }} opacity={0.9}>
                 Forgot password? <Link fontWeight="bold" textDecoration="underline" _hover={{ color: 'blue.200' }}>Reset Here</Link>
               </Text>
-            </Flex>
+              
+              <Divider borderColor="whiteAlpha.300" w="50%" />
+
+              {/* --- NEW: Dynamic Footer Links based on Role --- */}
+              {role !== 'admin' ? (
+                <Text fontSize={{ base: 'xs', md: 'sm' }} opacity={0.7}>
+                  Authorized personnel only?{' '}
+                  <Link fontWeight="bold" onClick={() => handleRoleChange('admin')} _hover={{ color: 'blue.200' }}>
+                    Admin Login
+                  </Link>
+                </Text>
+              ) : (
+                <Text fontSize={{ base: 'xs', md: 'sm' }} opacity={0.7}>
+                  Not an administrator?{' '}
+                  <Link fontWeight="bold" onClick={() => handleRoleChange('student')} _hover={{ color: 'blue.200' }}>
+                    Back to User Login
+                  </Link>
+                </Text>
+              )}
+            </VStack>
           </form>
         </Box>
       </Flex>
