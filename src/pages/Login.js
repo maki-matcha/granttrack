@@ -229,9 +229,9 @@ export default function Login() {
               {/* --- NEW: Dynamic Footer Links based on Role --- */}
               {role !== 'admin' ? (
                 <Text fontSize={{ base: 'xs', md: 'sm' }} opacity={0.7}>
-                  Authorized personnel only?{' '}
+                  Are you an admin? Click{' '}
                   <Link fontWeight="bold" onClick={() => handleRoleChange('admin')} _hover={{ color: 'blue.200' }}>
-                    Admin Login
+                    here
                   </Link>
                 </Text>
               ) : (
