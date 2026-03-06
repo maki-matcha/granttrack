@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Box, Heading, Flex, Text, SimpleGrid, Button, Avatar, VStack, HStack,
   FormControl, FormLabel, Input, useToast, Divider, Icon, FormHelperText, Badge,
-  Popover, PopoverTrigger, PopoverContent, PopoverArrow
+  Popover, PopoverTrigger, PopoverContent, PopoverArrow, useColorModeValue
 } from '@chakra-ui/react';
 import { FaUserShield, FaEnvelope, FaIdCard, FaCamera } from 'react-icons/fa';
 import DashboardLayout from '../../components/DashboardLayout';
@@ -10,6 +10,21 @@ import DashboardLayout from '../../components/DashboardLayout';
 export default function StudentProfile() {
   const toast = useToast();
   const fileInputRef = useRef(null);
+  
+  // --- DARK MODE HOOKS & COLORS ---
+  const smoothTransition = "all 0.3s ease-in-out";
+  const headingColor = useColorModeValue('gray.700', 'whiteAlpha.900');
+  const sectionHeadingColor = useColorModeValue('blue.900', 'blue.300');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const cardShadow = useColorModeValue('sm', 'none');
+  const cardBorder = useColorModeValue('none', '1px solid #2D3748');
+  const textColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+  const subtitleColor = useColorModeValue('gray.600', 'gray.400');
+  const mutedText = useColorModeValue('gray.500', 'gray.400');
+  const inputBg = useColorModeValue('gray.50', 'gray.700');
+  const inputBorder = useColorModeValue('transparent', 'gray.600');
+  const readOnlyBg = useColorModeValue('gray.100', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('gray.100', 'gray.700');
   
   const [profileData, setProfileData] = useState({
     fullName: 'Taylor Swift',
@@ -75,12 +90,12 @@ export default function StudentProfile() {
     <DashboardLayout role="student" userName={profileData.fullName} userDetail={profileData.studentId}>
       <input type="file" accept="image/*" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImageUpload} />
       
-      <Heading size="lg" mb={6} color="gray.700">My Profile</Heading>
+      <Heading size="lg" mb={6} color={headingColor} transition={smoothTransition}>My Profile</Heading>
 
       <Flex direction={{ base: 'column', lg: 'row' }} gap={8}>
         
         <VStack w={{ base: 'full', lg: '300px' }} spacing={6}>
-          <Box bg="white" w="full" p={8} borderRadius="xl" shadow="sm" textAlign="center" borderTop="4px solid" borderColor="blue.500">
+          <Box bg={cardBg} w="full" p={8} borderRadius="xl" shadow={cardShadow} border={cardBorder} textAlign="center" borderTop="4px solid" borderColor="blue.500" transition={smoothTransition}>
             
             {/* --- INTERACTIVE AVATAR POPOVER --- */}
             <Popover placement="bottom" isLazy>
@@ -95,46 +110,55 @@ export default function StudentProfile() {
                   </Flex>
                 </Box>
               </PopoverTrigger>
-              <PopoverContent w="auto" p={2} shadow="xl" border="none" borderRadius="lg">
-                <PopoverArrow />
-                <Button size="sm" leftIcon={<FaCamera />} onClick={() => fileInputRef.current.click()} bg="blue.50" color="blue.700" _hover={{ bg: 'blue.100' }}>
+              <PopoverContent w="auto" p={2} shadow="xl" border="1px solid" borderColor={borderColor} borderRadius="lg" bg={cardBg} transition={smoothTransition}>
+                <PopoverArrow bg={cardBg} />
+                <Button size="sm" leftIcon={<FaCamera />} onClick={() => fileInputRef.current.click()} bg={useColorModeValue('blue.50', 'whiteAlpha.200')} color={useColorModeValue('blue.700', 'blue.200')} _hover={{ bg: useColorModeValue('blue.100', 'whiteAlpha.300') }}>
                   Upload New Photo
                 </Button>
               </PopoverContent>
             </Popover>
 
-            <Heading size="md" color="gray.800" mb={1}>{profileData.fullName}</Heading>
-            <Text color="gray.500" fontSize="sm" mb={4}>Student</Text>
+            <Heading size="md" color={textColor} mb={1} transition={smoothTransition}>{profileData.fullName}</Heading>
+            <Text color={mutedText} fontSize="sm" mb={4} transition={smoothTransition}>Student</Text>
             <Badge colorScheme="green" px={3} py={1} borderRadius="full">Active Account</Badge>
             
-            <Divider my={6} />
+            <Divider my={6} borderColor={borderColor} transition={smoothTransition} />
             <VStack align="start" spacing={3} w="full">
-              <HStack color="gray.600" fontSize="sm"><Icon as={FaIdCard} color="blue.500" /><Text fontWeight="bold">ID:</Text><Text>{profileData.studentId}</Text></HStack>
-              <HStack color="gray.600" fontSize="sm"><Icon as={FaEnvelope} color="blue.500" /><Text isTruncated>{profileData.email}</Text></HStack>
+              <HStack color={subtitleColor} fontSize="sm" transition={smoothTransition}><Icon as={FaIdCard} color="blue.500" /><Text fontWeight="bold">ID:</Text><Text>{profileData.studentId}</Text></HStack>
+              <HStack color={subtitleColor} fontSize="sm" transition={smoothTransition}><Icon as={FaEnvelope} color="blue.500" /><Text isTruncated>{profileData.email}</Text></HStack>
             </VStack>
           </Box>
         </VStack>
 
-        <Box flex={1} bg="white" borderRadius="xl" shadow="sm" p={8}>
-          <Heading size="md" color="blue.900" mb={6} borderBottom="1px solid" borderColor="gray.100" pb={4}>Personal Information</Heading>
+        <Box flex={1} bg={cardBg} borderRadius="xl" shadow={cardShadow} border={cardBorder} p={8} transition={smoothTransition}>
+          <Heading size="md" color={sectionHeadingColor} mb={6} borderBottom="1px solid" borderColor={borderColor} pb={4} transition={smoothTransition}>Personal Information</Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={8}>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Student ID / LRN</FormLabel>
-              <Input value={profileData.studentId} isReadOnly bg="gray.100" color="gray.500" cursor="not-allowed" border="none" />
-              <FormHelperText fontSize="xs" color="gray.400">This field cannot be changed.</FormHelperText>
+              <FormLabel fontSize="sm" color={subtitleColor} fontWeight="bold" transition={smoothTransition}>Student ID / LRN</FormLabel>
+              <Input value={profileData.studentId} isReadOnly bg={readOnlyBg} color={mutedText} cursor="not-allowed" border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
+              <FormHelperText fontSize="xs" color={mutedText} transition={smoothTransition}>This field cannot be changed.</FormHelperText>
             </FormControl>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Registered Full Name</FormLabel>
-              <Input value={profileData.fullName} isReadOnly bg="gray.100" color="gray.500" cursor="not-allowed" border="none" />
+              <FormLabel fontSize="sm" color={subtitleColor} fontWeight="bold" transition={smoothTransition}>Registered Full Name</FormLabel>
+              <Input value={profileData.fullName} isReadOnly bg={readOnlyBg} color={mutedText} cursor="not-allowed" border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
               <Button mt={2} size="xs" variant="outline" colorScheme="blue" leftIcon={<FaUserShield />} onClick={handleRequestNameChange} isLoading={isRequestingEdit}>Request Name Update</Button>
             </FormControl>
           </SimpleGrid>
 
-          <Heading size="md" color="blue.900" mb={6} borderBottom="1px solid" borderColor="gray.100" pb={4}>Contact Details</Heading>
+          <Heading size="md" color={sectionHeadingColor} mb={6} borderBottom="1px solid" borderColor={borderColor} pb={4} transition={smoothTransition}>Contact Details</Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={8}>
-            <FormControl><FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Email Address</FormLabel><Input name="email" value={profileData.email} onChange={handleProfileChange} bg="gray.50" /></FormControl>
-            <FormControl><FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Phone Number</FormLabel><Input name="phone" value={profileData.phone} onChange={handleProfileChange} bg="gray.50" /></FormControl>
-            <FormControl gridColumn={{ md: "span 2" }}><FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Home Address</FormLabel><Input name="address" value={profileData.address} onChange={handleProfileChange} bg="gray.50" /></FormControl>
+            <FormControl>
+              <FormLabel fontSize="sm" color={subtitleColor} fontWeight="bold" transition={smoothTransition}>Email Address</FormLabel>
+              <Input name="email" value={profileData.email} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
+            </FormControl>
+            <FormControl>
+              <FormLabel fontSize="sm" color={subtitleColor} fontWeight="bold" transition={smoothTransition}>Phone Number</FormLabel>
+              <Input name="phone" value={profileData.phone} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
+            </FormControl>
+            <FormControl gridColumn={{ md: "span 2" }}>
+              <FormLabel fontSize="sm" color={subtitleColor} fontWeight="bold" transition={smoothTransition}>Home Address</FormLabel>
+              <Input name="address" value={profileData.address} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
+            </FormControl>
           </SimpleGrid>
 
           <Flex justify="flex-end">

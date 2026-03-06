@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Box, Heading, Flex, Text, SimpleGrid, Button, Avatar, VStack, HStack,
   FormControl, FormLabel, Input, useToast, Divider, Icon, FormHelperText, Badge,
-  Popover, PopoverTrigger, PopoverContent, PopoverArrow
+  Popover, PopoverTrigger, PopoverContent, PopoverArrow, useColorModeValue
 } from '@chakra-ui/react';
 import { FaIdCard, FaUserTie, FaShieldAlt, FaCamera } from 'react-icons/fa';
 import OrganizationLayout from '../../components/OrganizationLayout';
@@ -26,6 +26,27 @@ export default function OrganizationProfile() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRequestingEdit, setIsRequestingEdit] = useState(false);
+
+  // --- DARK MODE HOOKS & COLORS ---
+  const smoothTransition = "all 0.3s ease-in-out";
+  const headingColor = useColorModeValue('gray.700', 'whiteAlpha.900');
+  const sectionHeadingColor = useColorModeValue('#0b253c', 'blue.300');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const cardBorder = useColorModeValue('none', '1px solid #2D3748');
+  const cardBorderColor = useColorModeValue('gray.100', 'gray.700');
+  const textColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+  const mutedText = useColorModeValue('gray.500', 'gray.400');
+  const labelColor = useColorModeValue('gray.600', 'gray.400');
+  
+  // Input Colors
+  const inputBg = useColorModeValue('gray.50', 'gray.700');
+  const readOnlyBg = useColorModeValue('gray.100', 'whiteAlpha.100');
+  const inputBorder = useColorModeValue('transparent', 'gray.600');
+  
+  // Theme Accents
+  const primaryAccent = useColorModeValue('#1A3263', 'blue.500');
+  const btnBg = useColorModeValue('#1A3263', 'blue.500');
+  const btnHover = useColorModeValue('#4A7A7D', 'blue.600');
 
   // --- AVATAR LOGIC ---
   const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem('granttrack_org_avatar') || '');
@@ -88,82 +109,84 @@ export default function OrganizationProfile() {
     <OrganizationLayout userName={savedRepName} userRole="CEO/Marketing Dir." orgId={orgData.orgId}>
       <input type="file" accept="image/*" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImageUpload} />
 
-      <Heading size="lg" mb={6} color="gray.700">Organization Profile</Heading>
+      <Heading size="lg" mb={6} color={headingColor} transition={smoothTransition}>Organization Profile</Heading>
 
       <Flex direction={{ base: 'column', lg: 'row' }} gap={8}>
         
+        {/* --- LEFT SIDEBAR (AVATAR) --- */}
         <VStack w={{ base: 'full', lg: '300px' }} spacing={6}>
-          <Box bg="white" w="full" p={8} borderRadius="xl" shadow="sm" textAlign="center" borderTop="4px solid" borderColor="#1A3263">
+          <Box bg={cardBg} w="full" p={8} borderRadius="xl" shadow="sm" border={cardBorder} textAlign="center" borderTop="4px solid" borderColor={primaryAccent} transition={smoothTransition}>
             
             <Popover placement="bottom" isLazy>
               <PopoverTrigger>
                 <Box position="relative" cursor="pointer" display="inline-block" role="group" mb={4}>
-                  <Avatar size="2xl" name={orgData.orgName} src={avatarUrl} bg="#1A3263" color="white" />
+                  <Avatar size="2xl" name={orgData.orgName} src={avatarUrl} bg={primaryAccent} color="white" />
                   <Flex position="absolute" top={0} left={0} w="full" h="full" bg="blackAlpha.600" borderRadius="full" align="center" justify="center" opacity={0} _groupHover={{ opacity: 1 }} transition="all 0.2s">
                     <Icon as={FaCamera} color="white" boxSize={8} />
                   </Flex>
                 </Box>
               </PopoverTrigger>
-              <PopoverContent w="auto" p={2} shadow="xl" border="none" borderRadius="lg">
-                <PopoverArrow />
-                <Button size="sm" leftIcon={<FaCamera />} onClick={() => fileInputRef.current.click()} bg="teal.50" color="teal.800" _hover={{ bg: 'teal.100' }}>
+              <PopoverContent w="auto" p={2} shadow="xl" border="1px solid" borderColor={cardBorderColor} borderRadius="lg" bg={cardBg} transition={smoothTransition}>
+                <PopoverArrow bg={cardBg} />
+                <Button size="sm" leftIcon={<FaCamera />} onClick={() => fileInputRef.current.click()} bg={useColorModeValue('teal.50', 'whiteAlpha.200')} color={useColorModeValue('teal.800', 'teal.200')} _hover={{ bg: useColorModeValue('teal.100', 'whiteAlpha.300') }}>
                   Upload New Photo
                 </Button>
               </PopoverContent>
             </Popover>
 
-            <Heading size="md" color="gray.800" mb={1}>{orgData.orgName}</Heading>
-            <Text color="gray.500" fontSize="sm" mb={4}>Partner Organization</Text>
+            <Heading size="md" color={textColor} mb={1} transition={smoothTransition}>{orgData.orgName}</Heading>
+            <Text color={mutedText} fontSize="sm" mb={4} transition={smoothTransition}>Partner Organization</Text>
             <Badge colorScheme="teal" px={3} py={1} borderRadius="full">Verified Partner</Badge>
             
-            <Divider my={6} />
+            <Divider my={6} borderColor={cardBorderColor} transition={smoothTransition} />
             <VStack align="start" spacing={3} w="full">
-              <HStack color="gray.600" fontSize="sm"><Icon as={FaIdCard} color="#1A3263" /><Text fontWeight="bold">ORG ID:</Text><Text>{orgData.orgId}</Text></HStack>
-              <HStack color="gray.600" fontSize="sm">
-                <Icon as={FaUserTie} color="#1A3263" />
+              <HStack color={labelColor} fontSize="sm" transition={smoothTransition}><Icon as={FaIdCard} color={primaryAccent} /><Text fontWeight="bold">ORG ID:</Text><Text>{orgData.orgId}</Text></HStack>
+              <HStack color={labelColor} fontSize="sm" transition={smoothTransition}>
+                <Icon as={FaUserTie} color={primaryAccent} />
                 <Text isTruncated>Rep: {savedRepName}</Text>
               </HStack>
             </VStack>
           </Box>
         </VStack>
 
-        <Box flex={1} bg="white" borderRadius="xl" shadow="sm" p={8}>
-          <Heading size="md" color="#0b253c" mb={6} borderBottom="1px solid" borderColor="gray.100" pb={4}>Official Entity Information</Heading>
+        {/* --- MAIN PROFILE FORM --- */}
+        <Box flex={1} bg={cardBg} borderRadius="xl" shadow="sm" border={cardBorder} p={8} transition={smoothTransition}>
+          <Heading size="md" color={sectionHeadingColor} mb={6} borderBottom="1px solid" borderColor={cardBorderColor} pb={4} transition={smoothTransition}>Official Entity Information</Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={8}>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Organization ID</FormLabel>
-              <Input value={orgData.orgId} isReadOnly bg="gray.100" color="gray.500" cursor="not-allowed" border="none" />
-              <FormHelperText fontSize="xs" color="gray.400">System generated verification ID.</FormHelperText>
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Organization ID</FormLabel>
+              <Input value={orgData.orgId} isReadOnly bg={readOnlyBg} color={mutedText} cursor="not-allowed" border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
+              <FormHelperText fontSize="xs" color={mutedText} transition={smoothTransition}>System generated verification ID.</FormHelperText>
             </FormControl>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Registered Legal Name</FormLabel>
-              <Input value={orgData.orgName} isReadOnly bg="gray.100" color="gray.500" cursor="not-allowed" border="none" />
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Registered Legal Name</FormLabel>
+              <Input value={orgData.orgName} isReadOnly bg={readOnlyBg} color={mutedText} cursor="not-allowed" border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
               <Button mt={2} size="xs" variant="outline" colorScheme="teal" leftIcon={<FaShieldAlt />} onClick={handleRequestOrgNameChange} isLoading={isRequestingEdit}>Request Legal Name Update</Button>
             </FormControl>
           </SimpleGrid>
 
-          <Heading size="md" color="#0b253c" mb={6} borderBottom="1px solid" borderColor="gray.100" pb={4}>Representative & Contact Details</Heading>
+          <Heading size="md" color={sectionHeadingColor} mb={6} borderBottom="1px solid" borderColor={cardBorderColor} pb={4} transition={smoothTransition}>Representative & Contact Details</Heading>
           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6} mb={8}>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Representative Name</FormLabel>
-              <Input name="repName" value={orgData.repName} onChange={handleProfileChange} bg="gray.50" />
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Representative Name</FormLabel>
+              <Input name="repName" value={orgData.repName} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
             </FormControl>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Contact Email</FormLabel>
-              <Input name="email" value={orgData.email} onChange={handleProfileChange} bg="gray.50" />
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Contact Email</FormLabel>
+              <Input name="email" value={orgData.email} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
             </FormControl>
             <FormControl>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Phone Number</FormLabel>
-              <Input name="phone" value={orgData.phone} onChange={handleProfileChange} bg="gray.50" />
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Phone Number</FormLabel>
+              <Input name="phone" value={orgData.phone} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
             </FormControl>
             <FormControl gridColumn={{ md: "span 2" }}>
-              <FormLabel fontSize="sm" color="gray.600" fontWeight="bold">Organization Address</FormLabel>
-              <Input name="address" value={orgData.address} onChange={handleProfileChange} bg="gray.50" />
+              <FormLabel fontSize="sm" color={labelColor} fontWeight="bold" transition={smoothTransition}>Organization Address</FormLabel>
+              <Input name="address" value={orgData.address} onChange={handleProfileChange} bg={inputBg} color={textColor} border="1px solid" borderColor={inputBorder} transition={smoothTransition} />
             </FormControl>
           </SimpleGrid>
 
           <Flex justify="flex-end">
-            <Button bg="#1A3263" color="white" _hover={{ bg: '#4A7A7D' }} size="lg" px={8} onClick={handleSaveChanges} isLoading={isSubmitting}>Save Changes</Button>
+            <Button bg={btnBg} color="white" _hover={{ bg: btnHover }} size="lg" px={8} onClick={handleSaveChanges} isLoading={isSubmitting} transition={smoothTransition}>Save Changes</Button>
           </Flex>
         </Box>
       </Flex>

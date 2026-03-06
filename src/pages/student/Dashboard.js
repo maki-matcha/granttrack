@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {
   Box, Heading, Flex, Text, SimpleGrid, Badge, Button, Image, VStack, HStack, Icon, Progress,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
-  FormControl, FormLabel, Checkbox, Textarea, Input, InputGroup, InputLeftElement, useDisclosure
+  FormControl, FormLabel, Checkbox, Input, InputGroup, useDisclosure, useColorModeValue
 } from '@chakra-ui/react';
-import { FaRegCalendarAlt, FaRegCheckSquare, FaUserGraduate, FaFolder, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
+import { FaRegCalendarAlt, FaRegCheckSquare, FaUserGraduate, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
 import DashboardLayout from '../../components/DashboardLayout';
 
 // Scholarship Data
@@ -44,6 +44,17 @@ export const scholarshipsData = [
 const requiredDocsList = ['School ID:', 'Registration Form (RF)', 'Birth Certificate', 'Recent 2x2 Photo'];
 
 export default function StudentDashboard() {
+  const smoothTransition = "all 0.3s ease-in-out";
+
+  // --- DARK MODE COLORS ---
+  const headingColor = useColorModeValue('gray.800', 'whiteAlpha.900');
+  const subtitleColor = useColorModeValue('gray.500', 'gray.400');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const cardBorder = useColorModeValue('gray.100', 'gray.700');
+  const statBoxBg = useColorModeValue('blue.50', 'blue.900');
+  const inputBg = useColorModeValue('gray.50', 'gray.700');
+  const imageBoxBg = useColorModeValue('gray.100', 'whiteAlpha.200');
+
   const getBadgeColor = (status) => {
     if (status === 'Ongoing') return 'yellow';
     if (status === 'Open') return 'green';
@@ -65,52 +76,26 @@ export default function StudentDashboard() {
   const [selectedScholarship, setSelectedScholarship] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // --- NEW: Step 1 Validations (Student Information) ---
-  const [studentInfo, setStudentInfo] = useState({
-    fullName: '',
-    studentId: '',
-    academicYear: ''
-  });
-
-  const handleStudentInfoChange = (e) => {
-    setStudentInfo({ ...studentInfo, [e.target.name]: e.target.value });
-  };
-
-  // Checks if all Step 1 fields are filled
-  const isStep1Valid = 
-    studentInfo.fullName.trim() !== '' && 
-    studentInfo.studentId.trim() !== '' && 
-    studentInfo.academicYear.trim() !== '';
+  // Step 1 Validations
+  const [studentInfo, setStudentInfo] = useState({ fullName: '', studentId: '', academicYear: '' });
+  const handleStudentInfoChange = (e) => setStudentInfo({ ...studentInfo, [e.target.name]: e.target.value });
+  const isStep1Valid = studentInfo.fullName.trim() !== '' && studentInfo.studentId.trim() !== '' && studentInfo.academicYear.trim() !== '';
 
   // Step 2 Validations
   const [uploadedDocs, setUploadedDocs] = useState({});
   const [isCertified, setIsCertified] = useState(false);
-
   const isStep2Valid = requiredDocsList.every(doc => uploadedDocs[doc]) && isCertified;
 
-  const handleApplyClick = (scholarship) => {
-    setSelectedScholarship(scholarship);
-    setModalStep(0); 
-    onModalOpen();
-  };
-
+  const handleApplyClick = (scholarship) => { setSelectedScholarship(scholarship); setModalStep(0); onModalOpen(); };
   const handleProceedToApply = () => setModalStep(1);
   const handleNext = () => setModalStep(2);
+  const handleSubmit = () => { setIsSubmitting(true); setTimeout(() => { setIsSubmitting(false); setModalStep(3); }, 1500); };
   
-  const handleSubmit = () => {
-    setIsSubmitting(true); 
-    setTimeout(() => {
-      setIsSubmitting(false); 
-      setModalStep(3); 
-    }, 1500);
-  };
-
   const handleCloseModal = () => {
     onModalClose();
     setTimeout(() => {
       setModalStep(0);
       setIsSubmitting(false);
-      // Reset ALL forms on close
       setStudentInfo({ fullName: '', studentId: '', academicYear: '' });
       setUploadedDocs({});
       setIsCertified(false);
@@ -119,271 +104,161 @@ export default function StudentDashboard() {
 
   return (
     <DashboardLayout role="student" userName="Taylor Swift" userDetail="00000000000">
-      <Heading size={{ base: 'md', md: 'lg' }} mb={2} color="gray.700">Welcome back, Taylor!</Heading>
-      <Text color="gray.500" mb={8} fontSize={{ base: 'sm', md: 'md' }}>Here is your grant status and available scholarships.</Text>
+      <Heading size={{ base: 'md', md: 'lg' }} mb={2} color={headingColor} transition={smoothTransition}>Welcome back, Taylor!</Heading>
+      <Text color={subtitleColor} mb={8} fontSize={{ base: 'sm', md: 'md' }} transition={smoothTransition}>Here is your grant status and available scholarships.</Text>
 
-      <Flex gap={6} direction={{ base: 'column', md: 'row' }} mb={8}>
-        <Box flex={1} bg="white" shadow="sm" borderRadius="md" p={6} borderTop="4px solid" borderColor={`${activeConfig.color}.400`}>
-          <Text fontWeight="bold" fontSize="lg" mb={4}>My Application Status</Text>
-          <Text fontSize="2xl" color={`${activeConfig.color}.500`} fontWeight="900" mb={2}>{currentStatus}</Text>
-          <Progress value={activeConfig.progress} colorScheme={activeConfig.color} size="sm" borderRadius="full" mb={2} />
-          <Text fontSize="xs" color="gray.500">{activeConfig.text}</Text>
+      {/* Status & Updates Section */}
+      <Flex gap={6} direction={{ base: 'column', lg: 'row' }} mb={10}>
+        <Box flex={1} bg={cardBg} borderRadius="2xl" p={{ base: 5, md: 8 }} shadow="sm" border="1px solid" borderColor={cardBorder} transition={smoothTransition}>
+          <HStack justify="space-between" mb={6}>
+            <Heading size="md" color={headingColor} transition={smoothTransition}>My Application Status</Heading>
+            <Badge colorScheme={activeConfig.color} px={3} py={1} borderRadius="full" fontSize="sm">{currentStatus}</Badge>
+          </HStack>
+          <Progress value={activeConfig.progress} colorScheme={activeConfig.color} borderRadius="full" size="sm" mb={4} />
+          <Text fontWeight="bold" color={`${activeConfig.color}.500`} fontSize="sm" mb={1}>{activeConfig.text}</Text>
+          <Text fontSize="sm" color={subtitleColor} transition={smoothTransition}>We are currently verifying your documents. Please wait for the admin's feedback.</Text>
         </Box>
 
-        <Box flex={1} bg="blue.50" shadow="sm" borderRadius="md" p={6}>
-          <Text fontWeight="bold" fontSize="lg" mb={2} color="blue.800">Latest Update</Text>
-          <Text fontSize="sm" color="blue.600">Please make sure all your required documents are submitted before the November 1st deadline.</Text>
+        <Box w={{ base: 'full', lg: '350px' }} bg={cardBg} borderRadius="2xl" p={{ base: 5, md: 8 }} shadow="sm" border="1px solid" borderColor={cardBorder} transition={smoothTransition}>
+          <Heading size="md" mb={6} color={headingColor} transition={smoothTransition}>Latest Updates</Heading>
+          <VStack align="stretch" spacing={4}>
+            <HStack align="start" spacing={3}>
+              <Box p={2} bg={statBoxBg} borderRadius="md" color="blue.500" transition={smoothTransition}><Icon as={FaInfoCircle} /></Box>
+              <Box>
+                <Text fontSize="sm" fontWeight="bold" color={headingColor} transition={smoothTransition}>Document Verified</Text>
+                <Text fontSize="xs" color={subtitleColor} transition={smoothTransition}>Your Birth Certificate was accepted.</Text>
+              </Box>
+            </HStack>
+          </VStack>
         </Box>
       </Flex>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} spacing={6}>
+      <Heading size="md" mb={6} color={headingColor} transition={smoothTransition}>Explore Scholarships</Heading>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
         {scholarshipsData.map((scholarship) => (
-          <Box key={scholarship.id} bg="#1a4e6e" borderRadius="xl" overflow="hidden" color="white" boxShadow="md" display="flex" flexDirection="column">
+          <Box key={scholarship.id} bg={cardBg} borderRadius="2xl" shadow="sm" border="1px solid" borderColor={cardBorder} transition={smoothTransition} _hover={{ transform: 'translateY(-4px)', shadow: 'md' }} display="flex" flexDirection="column" overflow="hidden">
+            
+            {/* Title & Badge */}
             <Flex justify="space-between" align="center" p={4} pb={2}>
-              <Text fontWeight="bold" fontSize="lg">{scholarship.title}</Text>
-              <Badge colorScheme={getBadgeColor(scholarship.status)} borderRadius="full" px={2} textTransform="capitalize">
-                {scholarship.status}
-              </Badge>
+              <Text fontWeight="bold" fontSize="lg" color={headingColor} transition={smoothTransition}>{scholarship.title}</Text>
+              <Badge colorScheme={getBadgeColor(scholarship.status)} borderRadius="full" px={2} textTransform="capitalize">{scholarship.status}</Badge>
             </Flex>
+            
+            {/* Image Box */}
             <Box px={4} py={2}>
-              <Box w="full" h="120px" bg="whiteAlpha.300" borderRadius="md" display="flex" alignItems="center" justifyContent="center" overflow="hidden">
+              <Box w="full" h="120px" bg={imageBoxBg} borderRadius="md" display="flex" alignItems="center" justifyContent="center" overflow="hidden" transition={smoothTransition}>
                 <Image src="/scholarship.jpg" alt="application" objectFit="cover" fallbackSrc="https://via.placeholder.com/400x150/0b1d2e/ffffff?text=SCHOLARSHIP+APPLICATION" />
               </Box>
             </Box>
-            <VStack align="start" px={5} py={3} spacing={2} fontSize="sm" flex={1}>
+            
+            {/* Info VStack */}
+            <VStack align="start" px={5} py={3} spacing={2} fontSize="sm" flex={1} color={subtitleColor} transition={smoothTransition}>
               <Flex align="center"><Icon as={FaRegCalendarAlt} mr={3} /><Text>Deadline: <Text as="span" fontWeight="bold">{scholarship.deadline}</Text></Text></Flex>
               <Flex align="center"><Icon as={FaRegCheckSquare} mr={3} /><Text>{scholarship.amount}</Text></Flex>
               <Flex align="center"><Icon as={FaUserGraduate} mr={3} /><Text>{scholarship.level}</Text></Flex>
             </VStack>
-            <Box p={4} mt="auto">
-              <Button 
-                w="full" 
-                bg="white" 
-                color="#1a4e6e" 
-                borderRadius="full" 
-                _hover={{ bg: 'gray.100' }}
-                onClick={() => handleApplyClick(scholarship)}
-              >
-                View Details
+
+            <Box p={4} borderTop="1px solid" borderColor={cardBorder} transition={smoothTransition}>
+              <Button w="full" bg="blue.600" color="white" _hover={{ bg: 'blue.700' }} onClick={() => handleApplyClick(scholarship)} isDisabled={scholarship.status === 'Closed'}>
+                {scholarship.status === 'Closed' ? 'Closed' : 'View Details & Apply'}
               </Button>
             </Box>
           </Box>
         ))}
       </SimpleGrid>
 
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
-        isCentered 
-        size={modalStep === 3 ? "sm" : "xl"}
-        preserveScrollBarGap
-        motionPreset="slideInBottom"
-      >
-        <ModalOverlay bg="blackAlpha.400" />
-        <ModalContent borderRadius="xl" overflow="hidden">
-          
-          {modalStep !== 3 && (
-            <ModalHeader color="blue.900" borderBottom="1px solid" borderColor="gray.100" pb={3}>
-              {modalStep === 0 ? "Scholarship Details" : (modalStep === 1 ? "Student Information" : "Upload Requirements")}
-            </ModalHeader>
-          )}
-          {modalStep !== 3 && <ModalCloseButton />}
-
-          <ModalBody py={6}>
-            
-            {modalStep === 0 && selectedScholarship && (
-              <Box>
-                <Flex justify="space-between" align="center" mb={4}>
-                  <Heading size="md" color="blue.900">{selectedScholarship.title}</Heading>
-                  <Badge colorScheme={getBadgeColor(selectedScholarship.status)} size="lg" px={3} py={1} borderRadius="md">
-                    {selectedScholarship.status}
-                  </Badge>
-                </Flex>
-                
-                <Box bg="blue.50" p={4} borderRadius="md" mb={6}>
-                  <Flex align="flex-start">
-                    <Icon as={FaInfoCircle} color="blue.600" mt={1} mr={3} />
-                    <Text fontSize="sm" color="blue.900" lineHeight="1.6">
-                      {selectedScholarship.description}
-                    </Text>
-                  </Flex>
-                </Box>
-
-                <SimpleGrid columns={2} spacing={4} bg="gray.50" p={5} borderRadius="md" border="1px solid" borderColor="gray.100" mb={2}>
-                  <Box>
-                    <Text fontSize="xs" color="gray.500" fontWeight="bold" textTransform="uppercase" mb={1}>Semesterly Allowance</Text>
-                    <Text fontSize="lg" fontWeight="900" color="green.600">{selectedScholarship.allowance}</Text>
-                  </Box>
-                  <Box>
-                    <Text fontSize="xs" color="gray.500" fontWeight="bold" textTransform="uppercase" mb={1}>Application Deadline</Text>
-                    <Text fontSize="md" fontWeight="bold" color="red.500">{selectedScholarship.deadline}</Text>
-                  </Box>
-                  <Box>
-                    <Text fontSize="xs" color="gray.500" fontWeight="bold" textTransform="uppercase" mb={1}>Eligible Level</Text>
-                    <Text fontSize="sm" fontWeight="semibold" color="gray.700">{selectedScholarship.level}</Text>
-                  </Box>
-                  <Box>
-                    <Text fontSize="xs" color="gray.500" fontWeight="bold" textTransform="uppercase" mb={1}>Maximum Amount</Text>
-                    <Text fontSize="sm" fontWeight="semibold" color="gray.700">{selectedScholarship.amount}</Text>
-                  </Box>
-                </SimpleGrid>
-              </Box>
-            )}
-{/* --- UPDATED STEP 1: Required Student Information --- */}
-            {/* --- UPDATED STEP 1: Required Student Information --- */}
-            {modalStep === 1 && (
-              <Box>
-                <Heading size="sm" color="blue.900" mb={4}>Required Details</Heading>
-                <SimpleGrid columns={2} spacing={4}>
-                  <FormControl isRequired>
-                    <FormLabel fontSize="xs" color="blue.900" mb={1}>Full Name:</FormLabel>
-                    <Input 
-                      name="fullName"
-                      value={studentInfo.fullName}
-                      onChange={handleStudentInfoChange}
-                      size="sm" borderRadius="md" bg="gray.50" placeholder="e.g., Taylor Swift" 
-                    />
-                  </FormControl>
-                  <FormControl isRequired>
-                    <FormLabel fontSize="xs" color="blue.900" mb={1}>Student ID:</FormLabel>
-                    <Input 
-                      name="studentId"
-                      value={studentInfo.studentId}
-                      onChange={handleStudentInfoChange}
-                      size="sm" borderRadius="md" bg="gray.50" placeholder="e.g., 2024-00123" 
-                    />
-                  </FormControl>
-                  <FormControl isRequired>
-                    <FormLabel fontSize="xs" color="blue.900" mb={1}>Academic Year:</FormLabel>
-                    <Input 
-                      name="academicYear"
-                      value={studentInfo.academicYear}
-                      onChange={handleStudentInfoChange}
-                      size="sm" borderRadius="md" bg="gray.50" placeholder="e.g., 2024-2025" 
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel fontSize="xs" color="blue.900" mb={1}>Scholarship Program:</FormLabel>
-                    <Input size="sm" borderRadius="md" bg="gray.100" color="gray.600" value={selectedScholarship?.title || ''} isReadOnly />
-                  </FormControl>
-                </SimpleGrid>
-              </Box>
-            )}
-
-            {modalStep === 2 && (
-              <Box>
-                <Heading size="sm" color="blue.900" mb={4}>Required Documents</Heading>
-                <SimpleGrid columns={2} spacing={4} mb={4}>
-                  {requiredDocsList.map((doc, i) => (
-                    <FormControl key={i} isRequired>
-                      <FormLabel fontSize="xs" color="blue.900" mb={1}>{doc}</FormLabel>
-                      <InputGroup size="sm">
-                        <Input 
-                          type="file" 
-                          opacity={0} position="absolute" w="full" h="full" cursor="pointer" zIndex={2} 
-                          onChange={(e) => {
-                            if (e.target.files.length > 0) {
-                              setUploadedDocs(prev => ({ ...prev, [doc]: e.target.files[0].name }));
-                            }
-                          }}
-                        />
-                        <Input 
-                          placeholder={uploadedDocs[doc] || "Upload Document"} 
-                          bg="gray.100" 
-                          borderRadius="md" 
-                          readOnly 
-                          color={uploadedDocs[doc] ? "blue.700" : "gray.500"}
-                          fontWeight={uploadedDocs[doc] ? "bold" : "normal"}
-                          _placeholder={{ color: uploadedDocs[doc] ? 'blue.700' : 'gray.400' }} 
-                        />
-                        <InputLeftElement pointerEvents="none" right={0} left="auto" px={3} zIndex={1}>
-                          <Icon as={FaFolder} color={uploadedDocs[doc] ? "green.500" : "blue.700"} />
-                        </InputLeftElement>
-                      </InputGroup>
-                    </FormControl>
-                  ))}
-                </SimpleGrid>
-
-                <FormControl mb={4}>
-                  <FormLabel fontSize="xs" color="blue.900" mb={1}>Remarks (Optional)</FormLabel>
-                  <Textarea 
-                    placeholder="Any additional notes regarding your submission..." 
-                    size="sm" bg="gray.100" borderRadius="md" border="none" rows={4}
-                  />
-                </FormControl>
-
-                <Checkbox 
-                  colorScheme="blue" size="sm" alignItems="flex-start"
-                  isChecked={isCertified}
-                  onChange={(e) => setIsCertified(e.target.checked)}
-                >
-                  <Text fontSize="xs" color="gray.600" mt="-1px">
-                    I certify that all uploaded documents are true and correct. I understand that submitting false information may lead to disqualification.
-                  </Text>
-                </Checkbox>
-              </Box>
-            )}
-
-            {modalStep === 3 && (
-              <VStack textAlign="center" spacing={4} py={6}>
-                <Icon as={FaCheckCircle} w={16} h={16} color="green.400" />
-                <Heading size="md" color="blue.900">Application Submitted Successfully</Heading>
-                <Text fontSize="sm" color="gray.500">
-                  Your documents have been successfully submitted!
-                </Text>
-              </VStack>
-            )}
-
-          </ModalBody>
-
-          {modalStep !== 3 && (
-            <ModalFooter borderTop="1px solid" borderColor="gray.100" pt={4} pb={6}>
+      {/* Application Modal */}
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} size="xl" isCentered scrollBehavior="inside">
+        <ModalOverlay backdropFilter="blur(3px)" />
+        <ModalContent borderRadius="xl" bg={cardBg} transition={smoothTransition}>
+          {selectedScholarship && (
+            <>
               {modalStep === 0 && (
-                <Button 
-                  bg="blue.700" color="white" _hover={{ bg: 'blue.800' }} 
-                  onClick={handleProceedToApply} w="full"
-                  isDisabled={selectedScholarship?.status === 'Closed'}
-                >
-                  {selectedScholarship?.status === 'Closed' ? 'Applications Closed' : 'Proceed to Apply'}
-                </Button>
+                <>
+                  <ModalHeader color={headingColor} borderBottomWidth="1px" borderColor={cardBorder} transition={smoothTransition}>Scholarship Details</ModalHeader>
+                  <ModalCloseButton color={headingColor} />
+                  <ModalBody py={6}>
+                    <Heading size="lg" mb={2} color={headingColor}>{selectedScholarship.title}</Heading>
+                    <Badge colorScheme={getBadgeColor(selectedScholarship.status)} mb={6}>{selectedScholarship.status}</Badge>
+                    <Text color={subtitleColor} mb={6}>{selectedScholarship.description}</Text>
+                  </ModalBody>
+                  <ModalFooter borderTopWidth="1px" borderColor={cardBorder}>
+                    <Button variant="ghost" mr={3} onClick={handleCloseModal} color={headingColor}>Cancel</Button>
+                    <Button colorScheme="blue" onClick={handleProceedToApply}>Proceed to Apply</Button>
+                  </ModalFooter>
+                </>
               )}
-              {modalStep === 1 && (
-                <Button 
-                  bg="blue.700" color="white" _hover={{ bg: 'blue.800' }} 
-                  onClick={handleNext} w="120px"
-                  isDisabled={!isStep1Valid} // --- NEW: Disabled if fields are empty ---
-                >
-                  Next
-                </Button>
-              )}
-              {modalStep === 2 && (
-                <HStack spacing={3} justify="flex-end" w="full">
-                  <Button variant="outline" colorScheme="blue" borderRadius="md" w="130px" isDisabled={isSubmitting}>
-                    Save as Draft
-                  </Button>
-                  <Button 
-                    bg="blue.700" color="white" _hover={{ bg: 'blue.800' }} 
-                    borderRadius="md" w="130px" 
-                    onClick={handleSubmit}
-                    isLoading={isSubmitting}
-                    loadingText="Submitting..."
-                    isDisabled={!isStep2Valid}
-                  >
-                    Submit
-                  </Button>
-                </HStack>
-              )}
-            </ModalFooter>
-          )}
 
-          {modalStep === 3 && (
-            <ModalFooter pt={0} pb={8} justifyContent="center">
-              <Button bg="blue.700" color="white" _hover={{ bg: 'blue.800' }} w="full" maxW="200px" onClick={handleCloseModal}>
-                View Status
-              </Button>
-            </ModalFooter>
+              {modalStep === 1 && (
+                <>
+                  <ModalHeader color={headingColor} borderBottomWidth="1px" borderColor={cardBorder} transition={smoothTransition}>Step 1: Personal Information</ModalHeader>
+                  <ModalCloseButton color={headingColor} />
+                  <ModalBody py={6}>
+                    <VStack spacing={4}>
+                      <FormControl isRequired>
+                        <FormLabel color={headingColor}>Full Name</FormLabel>
+                        <Input name="fullName" value={studentInfo.fullName} onChange={handleStudentInfoChange} bg={inputBg} borderColor={cardBorder} color={headingColor} />
+                      </FormControl>
+                      <FormControl isRequired>
+                        <FormLabel color={headingColor}>Student ID Number</FormLabel>
+                        <Input name="studentId" value={studentInfo.studentId} onChange={handleStudentInfoChange} bg={inputBg} borderColor={cardBorder} color={headingColor} />
+                      </FormControl>
+                      <FormControl isRequired>
+                        <FormLabel color={headingColor}>Academic Year</FormLabel>
+                        <Input name="academicYear" value={studentInfo.academicYear} onChange={handleStudentInfoChange} bg={inputBg} borderColor={cardBorder} color={headingColor} />
+                      </FormControl>
+                    </VStack>
+                  </ModalBody>
+                  <ModalFooter borderTopWidth="1px" borderColor={cardBorder}>
+                    <Button colorScheme="blue" onClick={handleNext} isDisabled={!isStep1Valid} w="120px">Next</Button>
+                  </ModalFooter>
+                </>
+              )}
+
+              {modalStep === 2 && (
+                <>
+                  <ModalHeader color={headingColor} borderBottomWidth="1px" borderColor={cardBorder} transition={smoothTransition}>Step 2: Upload Requirements</ModalHeader>
+                  <ModalCloseButton color={headingColor} />
+                  <ModalBody py={6}>
+                    <SimpleGrid columns={2} spacing={4} mb={4}>
+                      {requiredDocsList.map((doc, idx) => (
+                        <FormControl key={idx} isRequired>
+                          <FormLabel fontSize="xs" color={headingColor} mb={1}>{doc}</FormLabel>
+                          <InputGroup size="sm">
+                            <Input type="file" bg={inputBg} borderColor={cardBorder} color={headingColor} onChange={(e) => setUploadedDocs({ ...uploadedDocs, [doc]: e.target.files[0] })} p={1} />
+                          </InputGroup>
+                        </FormControl>
+                      ))}
+                    </SimpleGrid>
+                    <Checkbox isChecked={isCertified} onChange={(e) => setIsCertified(e.target.checked)} color={headingColor} mt={4}>
+                      I certify that the documents provided are true and accurate.
+                    </Checkbox>
+                  </ModalBody>
+                  <ModalFooter borderTopWidth="1px" borderColor={cardBorder}>
+                    <HStack spacing={3} justify="flex-end" w="full">
+                      <Button variant="outline" colorScheme="blue" w="130px" isDisabled={isSubmitting}>Save as Draft</Button>
+                      <Button colorScheme="blue" w="130px" onClick={handleSubmit} isLoading={isSubmitting} loadingText="Submitting..." isDisabled={!isStep2Valid}>Submit</Button>
+                    </HStack>
+                  </ModalFooter>
+                </>
+              )}
+
+              {modalStep === 3 && (
+                <>
+                  <ModalHeader textAlign="center" pt={8} border="none">
+                    <Flex justify="center" mb={4}><Icon as={FaCheckCircle} w={16} h={16} color="green.400" /></Flex>
+                  </ModalHeader>
+                  <ModalBody textAlign="center" pb={6}>
+                    <Heading size="md" mb={2} color={headingColor}>Application Submitted!</Heading>
+                    <Text color={subtitleColor}>We have received your application for {selectedScholarship.title}.</Text>
+                  </ModalBody>
+                  <ModalFooter borderTopWidth="1px" borderColor={cardBorder} justifyContent="center" pb={8}>
+                    <Button colorScheme="blue" w="full" maxW="200px" onClick={handleCloseModal}>View Status</Button>
+                  </ModalFooter>
+                </>
+              )}
+            </>
           )}
-          
         </ModalContent>
       </Modal>
 
