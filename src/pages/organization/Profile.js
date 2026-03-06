@@ -93,12 +93,12 @@ export default function OrganizationProfile() {
       <Flex direction={{ base: 'column', lg: 'row' }} gap={8}>
         
         <VStack w={{ base: 'full', lg: '300px' }} spacing={6}>
-          <Box bg="white" w="full" p={8} borderRadius="xl" shadow="sm" textAlign="center" borderTop="4px solid" borderColor="#5F9598">
+          <Box bg="white" w="full" p={8} borderRadius="xl" shadow="sm" textAlign="center" borderTop="4px solid" borderColor="#1A3263">
             
             <Popover placement="bottom" isLazy>
               <PopoverTrigger>
                 <Box position="relative" cursor="pointer" display="inline-block" role="group" mb={4}>
-                  <Avatar size="2xl" name={orgData.orgName} src={avatarUrl} bg="#5F9598" color="white" />
+                  <Avatar size="2xl" name={orgData.orgName} src={avatarUrl} bg="#1A3263" color="white" />
                   <Flex position="absolute" top={0} left={0} w="full" h="full" bg="blackAlpha.600" borderRadius="full" align="center" justify="center" opacity={0} _groupHover={{ opacity: 1 }} transition="all 0.2s">
                     <Icon as={FaCamera} color="white" boxSize={8} />
                   </Flex>
@@ -118,9 +118,9 @@ export default function OrganizationProfile() {
             
             <Divider my={6} />
             <VStack align="start" spacing={3} w="full">
-              <HStack color="gray.600" fontSize="sm"><Icon as={FaIdCard} color="#5F9598" /><Text fontWeight="bold">ORG ID:</Text><Text>{orgData.orgId}</Text></HStack>
+              <HStack color="gray.600" fontSize="sm"><Icon as={FaIdCard} color="#1A3263" /><Text fontWeight="bold">ORG ID:</Text><Text>{orgData.orgId}</Text></HStack>
               <HStack color="gray.600" fontSize="sm">
-                <Icon as={FaUserTie} color="#5F9598" />
+                <Icon as={FaUserTie} color="#1A3263" />
                 <Text isTruncated>Rep: {savedRepName}</Text>
               </HStack>
             </VStack>
@@ -163,7 +163,7 @@ export default function OrganizationProfile() {
           </SimpleGrid>
 
           <Flex justify="flex-end">
-            <Button bg="#5F9598" color="white" _hover={{ bg: '#4A7A7D' }} size="lg" px={8} onClick={handleSaveChanges} isLoading={isSubmitting}>Save Changes</Button>
+            <Button bg="#1A3263" color="white" _hover={{ bg: '#4A7A7D' }} size="lg" px={8} onClick={handleSaveChanges} isLoading={isSubmitting}>Save Changes</Button>
           </Flex>
         </Box>
       </Flex>

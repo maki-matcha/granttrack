@@ -31,7 +31,7 @@ export default function Login() {
       icon: FaUserShield
     },
     organization: {
-      bg: '#5F9598',         
+      bg: '#1A3263',         
       btnBg: '#42686a',      
       inputLabel: 'Organization Email Address',
       inputType: 'email',

@@ -33,7 +33,7 @@ export default function OrgAnnouncement() {
             <Textarea placeholder="Add an announcement text here..." bg="gray.100" minH="200px" border="none" resize="none" borderRadius="md" />
             
             <Flex justify="flex-end" mt={2}>
-              <Button size="md" bg="#5F9598" color="white" _hover={{ bg: '#4A7A7D' }} px={8} borderRadius="full">
+              <Button size="md" bg="#1A3263" color="white" _hover={{ bg: '#4A7A7D' }} px={8} borderRadius="full">
                 Publish
               </Button>
             </Flex>

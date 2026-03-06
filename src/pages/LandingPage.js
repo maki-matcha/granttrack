@@ -109,8 +109,8 @@ const Navbar = () => {
         {navLinks.map((link) => (
           <ChakraLink 
             key={link.id} href={`#${link.id}`} color={activeSection === link.id ? 'blue.300' : 'white'}
-            fontWeight={activeSection === link.id ? 'bold' : '500'} borderBottom={activeSection === link.id ? '2px solid' : '2px solid transparent'}
-            borderColor="blue.300" pb={1} transition="all 0.2s ease-in-out" _hover={{ textDecoration: 'none', color: 'blue.300' }}
+            fontWeight={activeSection === link.id ? 'bold' : '500'}
+            pb={1} transition="all 0.2s ease-in-out" _hover={{ textDecoration: 'none', color: 'blue.300' }}
             onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }} 
           >
             {link.label}

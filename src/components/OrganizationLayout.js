@@ -26,7 +26,7 @@ const SidebarContent = ({ userName, userRole, navigate, location, onClose, avata
     <Flex direction="column" h="100%" w="full">
       <Flex align="center" mb={6} px={2}>
         <Box w={8} h={8} borderRadius="md" bg="white" mr={3} display="flex" alignItems="center" justifyContent="center">
-          <Text color="#5F9598" fontWeight="bold" fontSize="sm">GT</Text>
+          <Text color="#1A3263" fontWeight="bold" fontSize="sm">GT</Text>
         </Box>
         <Text fontSize="xl" fontWeight="900" color="white" letterSpacing="tighter">GrantTrack</Text>
       </Flex>
@@ -105,14 +105,14 @@ export default function OrganizationLayout({ children, userName = "Mikha Lim", u
 
   return (
     <Flex h="100vh" bg="gray.50">
-      <Box w="250px" bg="#5F9598" p={6} display={{ base: 'none', md: 'block' }} h="100vh" position="sticky" top={0}>
+      <Box w="250px" bg="#1A3263" p={6} display={{ base: 'none', md: 'block' }} h="100vh" position="sticky" top={0}>
         {/* Pass displayUserName here */}
         <SidebarContent userName={displayUserName} userRole={userRole} navigate={navigate} location={location} avatarUrl={avatarUrl} />
       </Box>
 
       <Drawer isOpen={isSidebarOpen} placement="left" onClose={onSidebarClose}>
         <DrawerOverlay />
-        <DrawerContent bg="#5F9598" p={4}>
+        <DrawerContent bg="#1A3263" p={4}>
           <DrawerCloseButton color="white" />
           <DrawerHeader color="white" borderBottomWidth="1px" borderColor="whiteAlpha.200" mb={4}>Menu</DrawerHeader>
           <DrawerBody>
@@ -172,7 +172,7 @@ export default function OrganizationLayout({ children, userName = "Mikha Lim", u
                     <Text fontSize="sm" fontWeight="bold" color="gray.700">{displayUserName}</Text>
                     <Text fontSize="xs" color="gray.500">Organization</Text>
                   </Box>
-                  <Avatar size="sm" name={displayUserName} src={avatarUrl} bg="#5F9598" color="white" />
+                  <Avatar size="sm" name={displayUserName} src={avatarUrl} bg="#1A3263" color="white" />
                 </Flex>
               </MenuButton>
               <MenuList shadow="lg" border="none" borderRadius="xl">
