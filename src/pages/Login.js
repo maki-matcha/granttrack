@@ -93,7 +93,7 @@ export default function Login() {
 
         {/* Your preserved Logo and Title Layout */}
         <VStack spacing={4}>
-          <Image src="/granttracklogo.png" h={{ base: '50px', md: '70px' }} fallbackSrc="https://via.placeholder.com/70/0b1d2e?text=G" />
+          <Image src="/logod.png" h={{ base: '130px', md: '150px' }} fallbackSrc="https://via.placeholder.com/70/0b1d2e?text=G" />
           <Text fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }} fontWeight="900" color="gray.800" letterSpacing="tight">
             GrantTrack
           </Text>

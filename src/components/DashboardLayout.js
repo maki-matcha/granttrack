@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Flex, VStack, HStack, Text, Avatar, Button, Divider, Icon,
+  Box, Flex, VStack, HStack, Text, Avatar, Button, Divider, Icon, Image,
   Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody,
   useDisclosure, IconButton, InputGroup, InputLeftElement, Input,
   Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, useColorModeValue,
@@ -33,9 +33,17 @@ const SidebarContent = ({ role, userName, userDetail, navigate, location, onClos
   return (
     <Flex direction="column" h="100%" w="full">
       <Flex align="center" mb={6} px={2}>
-        <Box w={8} h={8} borderRadius="md" bg="white" mr={3} display="flex" alignItems="center" justifyContent="center">
-          <Text color={sidebarBgColor} fontWeight="bold" fontSize="sm">GT</Text>
-        </Box>
+        <Image 
+          src="/logod.png" 
+          alt="GrantTrack Logo" 
+          w={8} 
+          h={8} 
+          objectFit="contain" 
+          mr={3}
+          borderRadius="md"
+          bg="white"
+          p={1}
+        />
         <Text fontSize="xl" fontWeight="900" color="white" letterSpacing="tighter">GrantTrack</Text>
       </Flex>
 
