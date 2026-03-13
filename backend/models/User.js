@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -12,7 +13,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     email: {
       type: String,
       required: true,
@@ -27,12 +27,23 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "organization", "student"], // Strict role control for relationship linking
+      enum: ["admin", "organization", "student"],
     },
-    // We can add 'account_status' from the image later when we implement approval flows.
-    // Explicit relationships (student_id, etc.) will be linked in sub-schemas later.
+    // --- NEW PROFILE FIELDS ---
+    studentId: {
+      type: String,
+      default: "Not Assigned",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
   },
-  { timestamps: true }, // Handles created_at / updated_at automatically
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("User", userSchema);

@@ -44,7 +44,7 @@ export default function Login() {
   // Configuration for dynamic styling based on the selected role
   const roleConfig = {
     student: {
-      bg: "brand.studentBg",
+      bg: "brand.studentBg", // Ensure this exists in your Chakra theme, or fallback to a hex if needed
       btnBg: "#0b1d2e",
       icon: FaUserGraduate,
     },
@@ -121,14 +121,18 @@ export default function Login() {
           const userEmail = data.user.email || "";
           const userRole = data.user.role || "";
 
-          // Storing dynamic dynamic dynamic name fields
+          // Storing dynamic name fields (preserved your existing logic)
           localStorage.setItem("userFirstName", userFirstName);
           localStorage.setItem("userLastName", userLastName);
           localStorage.setItem("userFullName", userFullName); // Combine for easy sidebar display
           localStorage.setItem("userId", userEmail); // Using email as display ID in image 1
 
-          // Save role for Sidebar routing (e.g., used in DashboardLayout from previous turns)
+          // Save role for Sidebar routing
           localStorage.setItem("userRole", userRole);
+
+          // ✅ THIS IS THE NEW CRUCIAL LINE ✅
+          // Saves the full user object (including the database _id) so StudentProfile.js can fetch it!
+          localStorage.setItem("granttrack_user", JSON.stringify(data.user));
 
           // Route dynamically based on role (preserving organizational dashboard tweak)
           if (userRole === "organization") {
@@ -202,7 +206,7 @@ export default function Login() {
         p={{ base: 6, md: 8, lg: 12 }}
       >
         <Box w="full" maxW="md">
-          {/* USER TOGGLE (Login Portal Selection) - admin portal logic preserved from turn 2 */}
+          {/* USER TOGGLE (Login Portal Selection) */}
           {role !== "admin" ? (
             <Box mb={{ base: 8, md: 10 }}>
               <Text
@@ -249,13 +253,12 @@ export default function Login() {
                 Administrator Portal
               </Text>
               <Text fontSize="sm" opacity={0.8} mt={2}>
-                {" "}
                 Authorized admin credentials required
               </Text>
             </Box>
           )}
 
-          {/* Dynamic Icon Display (preserved) */}
+          {/* Dynamic Icon Display */}
           <Flex justify="center" mb={8}>
             <Flex
               w={20}

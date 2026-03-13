@@ -19,6 +19,16 @@ const scholarshipSchema = new mongoose.Schema({
 });
 const Scholarship = mongoose.model("Scholarship", scholarshipSchema);
 
+// --- APPLICATION SCHEMA ---
+const applicationSchema = new mongoose.Schema({
+  name: String,
+  lrn: String,
+  date: String,
+  status: { type: String, default: "Pending" },
+});
+
+const Application = mongoose.model("Application", applicationSchema);
+
 app.use(cors());
 app.use(express.json());
 
@@ -32,6 +42,17 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("GrantTrack API is running - Database Migration Enabled");
+});
+
+// --- GET ALL APPLICATIONS ---
+app.get("/api/applications", async (req, res) => {
+  try {
+    const applications = await Application.find({});
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error("Error fetching applications:", error);
+    res.status(500).json({ message: "Failed to fetch applications" });
+  }
 });
 
 // --- GET ALL SCHOLARSHIPS (UNCHANGED) ---
@@ -147,4 +168,58 @@ app.post("/api/login", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Migration complete. Server running on port ${PORT}`);
+});
+
+// --- GET USER PROFILE ---
+app.get("/api/users/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password"); // Exclude password for security
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ message: "Failed to fetch user profile" });
+  }
+});
+
+// --- UPDATE USER PROFILE ---
+app.put("/api/users/:id", async (req, res) => {
+  try {
+    // We only extract the fields that are allowed to be edited from the frontend
+    const { email, phone, address } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { email, phone, address },
+      { new: true, runValidators: true },
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+});
+
+// --- ADD NEW APPLICATION ---
+app.post("/api/applications", async (req, res) => {
+  try {
+    const newApplication = new Application(req.body);
+    await newApplication.save();
+    res.status(201).json({
+      message: "Application submitted successfully!",
+      data: newApplication,
+    });
+  } catch (error) {
+    console.error("Error submitting application:", error);
+    res.status(500).json({ message: "Failed to submit application" });
+  }
 });
